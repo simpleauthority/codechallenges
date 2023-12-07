@@ -2,6 +2,7 @@ package dev.jacobandersen.codechallenges.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -33,5 +34,18 @@ public class CombinatoricsUtil {
     public static <T> Collection<List<T>> partitionList(List<T> list, int numPerPartition) {
         AtomicInteger numPartitions = new AtomicInteger(0);
         return list.stream().collect(Collectors.groupingBy(item -> numPartitions.getAndIncrement() / numPerPartition)).values();
+    }
+
+    public static List<List<Long>> splitRange(List<Long> originalRange, List<Long> subRange) {
+        if (subRange.get(0) < originalRange.get(0) && subRange.get(1) > originalRange.get(1)) {
+            return List.of(originalRange);
+        } else if (subRange.get(0).equals(originalRange.get(0)) && subRange.get(1) < originalRange.get(1)) {
+            return List.of(subRange, List.of(subRange.get(0) + 1, originalRange.get(1)));
+        } else if (subRange.get(0) > originalRange.get(0) && subRange.get(1) < originalRange.get(1)) {
+            return List.of(List.of(originalRange.get(0), subRange.get(0) - 1), subRange, List.of(subRange.get(1) + 1, originalRange.get(1)));
+        } else if (subRange.get(0) > originalRange.get(0) && subRange.get(1).equals(originalRange.get(1))) {
+            return List.of(List.of(originalRange.get(0), subRange.get(1) - 1), subRange);
+        }
+        return Collections.emptyList();
     }
 }
